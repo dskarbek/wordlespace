@@ -1,4 +1,4 @@
-# wordlespace
+# WordleSpace
 Word space explorer that follows the Wordle hint rules.  Use this to see all the possible words that will match the hints you've gotten so far.
 
 ## Install
