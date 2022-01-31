@@ -364,7 +364,7 @@
     }
 
     function getGreenLetter(input) {
-      let val = getLetters(input, 'greenInput');
+      let val = getLetters(input, 'greenInput', false);
       if (val.length > 1) {
         val = [val[val.length - 1]];
         input.val(val[0]);
@@ -375,13 +375,16 @@
       return val[0];
     }
 
-    function getLetters(input, className) {
+    function getLetters(input, className, resize = true) {
       let val = input.val().toUpperCase().replace(/[^A-Z]/g, '');
       input.val(val);
       if (val.length) {
         input.addClass(className);
       } else {
         input.removeClass(className);
+      }
+      if (resize) {
+        input.attr('size', val.length + 1);
       }
       return Array.from(val);
     }
@@ -416,7 +419,6 @@
       outline: none;
     }
     input.grayInput {
-      text-align: left;
       background-color: var(--darkGray);
       border-color: var(--darkGray);
       color: var(--white);
@@ -452,14 +454,14 @@ Word space explorer that follows the Wordle hint rules
 <input id="g5" size="1"/>
 <h2>Yellow Letters</h2>
 <p>For each "yellow" letter (right letter in the wrong place) put the letters you have found in the boxes where they were found in.  That means that the word must contain that letter, but not in that position.</p>
-<input id="y1" size="5"/>
-<input id="y2" size="5"/>
-<input id="y3" size="5"/>
-<input id="y4" size="5"/>
-<input id="y5" size="5"/>
+<input id="y1" size="1"/>
+<input id="y2" size="1"/>
+<input id="y3" size="1"/>
+<input id="y4" size="1"/>
+<input id="y5" size="1"/>
 <h2>Gray Letters</h2>
 <p>For each "gray" letter (letter is not part of the solution) put all the letters in this box.</p>
-<input id="gray" size="30"/>
+<input id="gray" size="1"/>
 <h2>Possible Words: (<span id="count"></span> words)</h2>
 <ul id="words"></ul>
 </body>
