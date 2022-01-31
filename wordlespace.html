@@ -342,8 +342,13 @@
                 if (yellows[i].includes(chr)) {
                   return false;
                 }
-                // this letter can't be a gray letter
-                if (grays.includes(chr)) {
+                // this letter can't be a gray letter (unless it's also a yellow)
+                // we check for yellows here because we want the conflict to resolve in favor of
+                // keeping the word in. You can get the letter both ways which indicates that there
+                // is (for example) one of the letter but not two. We don't use this sort of hint
+                // at the moment, but if someone is inputing letters according to our directions,
+                // this will keep it working.
+                if (!allYellows.includes(chr) && grays.includes(chr)) {
                   return false;
                 }
               }
@@ -379,8 +384,14 @@
       font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
       font-size: 16px;
     }
+    input {
+      font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 24px;
+      text-align: center;
+    }
     li {
-      font-family: monospace
+      font-family: monospace;
+      font-size: 18px
     }
     ul {
       columns: 10
@@ -406,7 +417,7 @@ Word space explorer that follows the Wordle hint rules
 <input id="y5" size="5"/>
 <h2>Gray Letters</h2>
 <p>For each "gray" letter (letter is not part of the solution) put all the letters in this box.</p>
-<input id="gray"/>
+<input id="gray" size="30" style="text-align: left"/>
 <h2>Possible Words: (<span id="count"></span> words)</h2>
 <div id="words"></div>
 </body>
