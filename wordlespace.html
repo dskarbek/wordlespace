@@ -301,22 +301,23 @@
         "zoeas", "zoism", "zoist", "zombi", "zonae", "zonal", "zonda", "zoned", "zoner", "zones", "zonks", "zooea", "zooey", "zooid", "zooks", "zooms", "zoons", "zooty", "zoppa", "zoppo", "zoril", "zoris", "zorro", "zouks", "zowee", "zowie", "zulus", "zupan", "zupas", "zuppa", "zurfs", "zuzim", "zygal", "zygon", "zymes", "zymic"
       ];
       let greens = [
-        ($('#g1').val()),
-        ($('#g2').val()),
-        ($('#g3').val()),
-        ($('#g4').val()),
-        ($('#g5').val())
+        getGreenLetter($('#g1')),
+        getGreenLetter($('#g2')),
+        getGreenLetter($('#g3')),
+        getGreenLetter($('#g4')),
+        getGreenLetter($('#g5'))
       ];
       let yellows = [
-        Array.from($('#y1').val()),
-        Array.from($('#y2').val()),
-        Array.from($('#y3').val()),
-        Array.from($('#y4').val()),
-        Array.from($('#y5').val())
+        getLetters($('#y1')),
+        getLetters($('#y2')),
+        getLetters($('#y3')),
+        getLetters($('#y4')),
+        getLetters($('#y5'))
       ];
       let allYellows = [...new Set(yellows.flat())];
-      let grays = Array.from($('#gray').val());
+      let grays = getLetters($('#gray'));
       let words = wordlist
+          .map(w => w.toUpperCase())
           // must contain all yellow letters somewhere
           .filter(w => {
             for (let i = 0; i < allYellows.length; i += 1) {
@@ -353,9 +354,24 @@
       $('#count').html(words.length);
     }
 
+    function getGreenLetter(input) {
+      let val = input.val().toUpperCase().replace(/[^A-Z]/g, '');
+      if (val.length > 1) {
+        val = val[val.length - 1];
+      }
+      input.val(val);
+      return val;
+    }
+
+    function getLetters(input) {
+      let val = input.val().toUpperCase().replace(/[^A-Z]/g, '');
+      input.val(val);
+      return Array.from(val);
+    }
+
     $(function () {
       $(document).ready(updateWords);
-      $('input').change(updateWords);
+      $('input').on('input', updateWords);
     });
   </script>
   <style>
