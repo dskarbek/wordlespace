@@ -359,7 +359,7 @@
             }
             return true;
           });
-      $('#words').html('<ul>' + words.map(w => '<li>' + w + '</li>').join('') + '</ul>');
+      $('#words').html(words.map(w => '<li>' + w + '</li>').join(''));
       $('#count').html(words.length);
     }
 
@@ -450,6 +450,6 @@ Word space explorer that follows the Wordle hint rules
 <p>For each "gray" letter (letter is not part of the solution) put all the letters in this box.</p>
 <input id="gray" class="grayInput" size="30"/>
 <h2>Possible Words: (<span id="count"></span> words)</h2>
-<div id="words"></div>
+<ul id="words"></ul>
 </body>
 </html>
