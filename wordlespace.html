@@ -312,14 +312,14 @@
         getGreenLetter($('#g5'))
       ];
       let yellows = [
-        getLetters($('#y1')),
-        getLetters($('#y2')),
-        getLetters($('#y3')),
-        getLetters($('#y4')),
-        getLetters($('#y5'))
+        getLetters($('#y1'), 'yellowInput'),
+        getLetters($('#y2'), 'yellowInput'),
+        getLetters($('#y3'), 'yellowInput'),
+        getLetters($('#y4'), 'yellowInput'),
+        getLetters($('#y5'), 'yellowInput')
       ];
       let allYellows = [...new Set(yellows.flat())];
-      let grays = getLetters($('#gray'));
+      let grays = getLetters($('#gray'), 'grayInput');
       let words = wordlist
           .map(w => w.toUpperCase())
           // must contain all yellow letters somewhere
@@ -364,17 +364,25 @@
     }
 
     function getGreenLetter(input) {
-      let val = input.val().toUpperCase().replace(/[^A-Z]/g, '');
+      let val = getLetters(input, 'greenInput');
       if (val.length > 1) {
-        val = val[val.length - 1];
+        val = [val[val.length - 1]];
+        input.val(val[0]);
       }
-      input.val(val);
-      return val;
+      if (val.length === 0) {
+        return '';
+      }
+      return val[0];
     }
 
-    function getLetters(input) {
+    function getLetters(input, className) {
       let val = input.val().toUpperCase().replace(/[^A-Z]/g, '');
       input.val(val);
+      if (val.length) {
+        input.addClass(className);
+      } else {
+        input.removeClass(className);
+      }
       return Array.from(val);
     }
 
@@ -404,21 +412,24 @@
       text-align: center;
       border-style: solid;
       border-color: var(--lightGray);
-      color: var(--white);
+      color: var(--black);
       outline: none;
     }
     input.grayInput {
       text-align: left;
       background-color: var(--darkGray);
       border-color: var(--darkGray);
+      color: var(--white);
     }
     input.greenInput {
       background-color: var(--green);
       border-color: var(--green);
+      color: var(--white);
     }
     input.yellowInput {
       background-color: var(--yellow);
       border-color: var(--yellow);
+      color: var(--white);
     }
     li {
       font-family: monospace;
@@ -434,21 +445,21 @@
 Word space explorer that follows the Wordle hint rules
 <h2>Green Letters</h2>
 <p>For each "green" letter (right letter in the right place) put that letter in the box for the position it goes in.  There should be only one letter per box.</p>
-<input id="g1" class="greenInput" size="1"/>
-<input id="g2" class="greenInput" size="1"/>
-<input id="g3" class="greenInput" size="1"/>
-<input id="g4" class="greenInput" size="1"/>
-<input id="g5" class="greenInput" size="1"/>
+<input id="g1" size="1"/>
+<input id="g2" size="1"/>
+<input id="g3" size="1"/>
+<input id="g4" size="1"/>
+<input id="g5" size="1"/>
 <h2>Yellow Letters</h2>
 <p>For each "yellow" letter (right letter in the wrong place) put the letters you have found in the boxes where they were found in.  That means that the word must contain that letter, but not in that position.</p>
-<input id="y1" class="yellowInput" size="5"/>
-<input id="y2" class="yellowInput" size="5"/>
-<input id="y3" class="yellowInput" size="5"/>
-<input id="y4" class="yellowInput" size="5"/>
-<input id="y5" class="yellowInput" size="5"/>
+<input id="y1" size="5"/>
+<input id="y2" size="5"/>
+<input id="y3" size="5"/>
+<input id="y4" size="5"/>
+<input id="y5" size="5"/>
 <h2>Gray Letters</h2>
 <p>For each "gray" letter (letter is not part of the solution) put all the letters in this box.</p>
-<input id="gray" class="grayInput" size="30"/>
+<input id="gray" size="30"/>
 <h2>Possible Words: (<span id="count"></span> words)</h2>
 <ul id="words"></ul>
 </body>
