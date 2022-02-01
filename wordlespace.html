@@ -320,6 +320,7 @@
       ];
       let allYellows = [...new Set(yellows.flat())];
       let grays = getLetters($('#gray'), 'grayInput');
+      let letterFreq = new Map();
       let words = wordlist
           .map(w => w.toUpperCase())
           // must contain all yellow letters somewhere
@@ -359,6 +360,12 @@
             }
             return true;
           });
+
+      // count letter frequencies and sort by count, highest to lowest
+      words.forEach(w => new Set([...w]).forEach(ltr => countLetter(letterFreq, ltr)));
+      letterFreq = new Map([...letterFreq].sort(([k1, v1], [k2, v2]) => v2 - v1));
+
+      $('#frequency').html(Array.from(letterFreq.entries(), ([letter, count]) => '<li>' + letter + ': ' + count + '</li>').join(''));
       $('#words').html(words.map(w => '<li>' + w + '</li>').join(''));
       $('#count').html(words.length);
     }
@@ -389,9 +396,23 @@
       return Array.from(val);
     }
 
+    function countLetter(map, letter) {
+      let count = 0;
+      if (map.has(letter)) {
+        count = map.get(letter);
+      }
+      map.set(letter, count + 1);
+    }
+
     $(function () {
       $(document).ready(updateWords);
       $('input').on('input', updateWords);
+      $('#showFreq').on('change', function() {
+        $('#frequency').toggle(this.checked);
+      }).change();
+      $('#showWords').on('change', function() {
+        $('#words').toggle(this.checked);
+      }).change();
     });
   </script>
   <style>
@@ -437,32 +458,48 @@
       font-family: monospace;
       font-size: 18px
     }
-    ul {
+    ul#words {
       columns: 10
+    }
+    ul#frequency {
+      columns: 2;
     }
   </style>
 </head>
 <body>
 <h1>WordleSpace</h1>
 Word space explorer that follows the Wordle hint rules
-<h2>Green Letters</h2>
-<p>For each "green" letter (right letter in the right place) put that letter in the box for the position it goes in.  There should be only one letter per box.</p>
-<input id="g1" size="1"/>
-<input id="g2" size="1"/>
-<input id="g3" size="1"/>
-<input id="g4" size="1"/>
-<input id="g5" size="1"/>
-<h2>Yellow Letters</h2>
-<p>For each "yellow" letter (right letter in the wrong place) put the letters you have found in the boxes where they were found in.  That means that the word must contain that letter, but not in that position.</p>
-<input id="y1" size="1"/>
-<input id="y2" size="1"/>
-<input id="y3" size="1"/>
-<input id="y4" size="1"/>
-<input id="y5" size="1"/>
-<h2>Gray Letters</h2>
-<p>For each "gray" letter (letter is not part of the solution) put all the letters in this box.</p>
-<input id="gray" size="1"/>
-<h2>Possible Words: (<span id="count"></span> words)</h2>
-<ul id="words"></ul>
+<div class="inputBoxes">
+  <h2>Green Letters</h2>
+  <p>For each "green" letter (right letter in the right place) put that letter in the box for the
+    position it goes in. There should be only one letter per box.</p>
+  <input id="g1" size="1"/>
+  <input id="g2" size="1"/>
+  <input id="g3" size="1"/>
+  <input id="g4" size="1"/>
+  <input id="g5" size="1"/>
+  <h2>Yellow Letters</h2>
+  <p>For each "yellow" letter (right letter in the wrong place) put the letters you have found in
+    the boxes where they were found in. That means that the word must contain that letter, but not
+    in that position.</p>
+  <input id="y1" size="1"/>
+  <input id="y2" size="1"/>
+  <input id="y3" size="1"/>
+  <input id="y4" size="1"/>
+  <input id="y5" size="1"/>
+  <h2>Gray Letters</h2>
+  <p>For each "gray" letter (letter is not part of the solution) put all the letters in this
+    box.</p>
+  <input id="gray" size="1"/>
+</div>
+<div class="freqDisplay">
+  <h2><input type="checkbox" id="showFreq"/>Letter Frequencies:</h2>
+  <p>How many words (of the remaining possible words) does that letter show up in?</p>
+  <ul id="frequency"></ul>
+</div>
+<div class="wordDisplay">
+  <h2><input type="checkbox" id="showWords" checked/>Possible Words: (<span id="count"></span> words)</h2>
+  <ul id="words"></ul>
+</div>
 </body>
 </html>
