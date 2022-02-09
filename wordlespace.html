@@ -7,7 +7,6 @@
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'G-JBF2M8YCKP');
   </script>
 
@@ -37,12 +36,11 @@
       let grays = getLetters($('#gray'), 'grayInput');
       let letterFreq = new Map();
       let words = wordlist
-        // must contain all yellow letters somewhere
         .filter(w => {
-          let matchesYellows = allYellows.every(yellow => w.includes(yellow));
-          // letter by letter check
-          if (!matchesYellows)
+          // must contain all yellow letters somewhere
+          if (!allYellows.every(yellow => w.includes(yellow)))
             return false;
+          // letter by letter check
           for (let i = 0; i < 5; i += 1) {
             let chr = w.charAt(i);
             // if we have a green letter, it must match
