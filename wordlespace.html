@@ -481,7 +481,7 @@
       letterFreq = new Map([...letterFreq].sort(([k1, v1], [k2, v2]) => v2 - v1));
 
       $('#frequency').html(Array.from(letterFreq.entries(), ([letter, count]) => '<li>' + letter + ': ' + count + '</li>').join(''));
-      $('#words').html(words.map(w => '<li>' + w + '</li>').join(''));
+      $('#words').html(words.length > 6000 ? '' : words.map(w => '<li>' + w + '</li>').join(''));
       $('#count').html(words.length);
     }
 
