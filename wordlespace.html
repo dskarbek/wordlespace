@@ -518,6 +518,31 @@
       map.set(letter, count + 1);
     }
 
+    function pickWords() {
+      let letters = getLetters($('#wordPicker'), '', false);
+      let outputElement = $('#pickedWords');
+      if (letters.length < 3) {
+        outputElement.html('Enter at least 3 letters in the box.');
+        return;
+      }
+      if (letters.length > 5) {
+        outputElement.html('Enter no more than 5 letters in the box.');
+        return;
+      }
+
+      let words = wordlist
+          // find all words that match
+          .filter(w => letters.every(letter => w.includes(letter)))
+          // shuffle
+          .map(value => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value)
+          // take the first 10
+          .slice(0, 10);
+
+      outputElement.html(words.map(w => '<li>' + w + '</li>').join(''));
+    }
+
     $(function () {
       $(document).ready(updateWords);
       $('input').on('input', updateWords);
@@ -527,6 +552,7 @@
       $('#showWords').on('change', function() {
         $('#words').toggle(this.checked);
       }).change();
+      $('#wordPicker').on('input', pickWords);
     });
   </script>
   <style>
@@ -578,33 +604,52 @@
     ul#frequency {
       column-width: 200px;
     }
+    div.inputs {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-gap: 20px;
+    }
+    div.input {
+      min-width: 300px;
+    }
   </style>
 </head>
 <body>
 <h1>WordleSpace</h1>
 Word space explorer that follows the Wordle hint rules
-<div class="inputBoxes">
-  <h2>Green Letters</h2>
-  <p>For each "green" letter (right letter in the right place) put that letter in the box for the
-    position it goes in. There should be only one letter per box.</p>
-  <input id="g1" size="1"/>
-  <input id="g2" size="1"/>
-  <input id="g3" size="1"/>
-  <input id="g4" size="1"/>
-  <input id="g5" size="1"/>
-  <h2>Yellow Letters</h2>
-  <p>For each "yellow" letter (right letter in the wrong place) put the letters you have found in
-    the boxes where they were found in. That means that the word must contain that letter, but not
-    in that position.</p>
-  <input id="y1" size="1"/>
-  <input id="y2" size="1"/>
-  <input id="y3" size="1"/>
-  <input id="y4" size="1"/>
-  <input id="y5" size="1"/>
-  <h2>Gray Letters</h2>
-  <p>For each "gray" letter (letter is not part of the solution) put all the letters in this
-    box.</p>
-  <input id="gray" size="1"/>
+<div class="inputs">
+  <div class="input letterInputs">
+    <h2>Green Letters</h2>
+    <p>For each "green" letter (right letter in the right place) put that letter in the box for the
+      position it goes in. There should be only one letter per box.</p>
+    <input id="g1" size="1"/>
+    <input id="g2" size="1"/>
+    <input id="g3" size="1"/>
+    <input id="g4" size="1"/>
+    <input id="g5" size="1"/>
+    <h2>Yellow Letters</h2>
+    <p>For each "yellow" letter (right letter in the wrong place) put the letters you have found in
+      the boxes where they were found in. That means that the word must contain that letter, but not
+      in that position.</p>
+    <input id="y1" size="1"/>
+    <input id="y2" size="1"/>
+    <input id="y3" size="1"/>
+    <input id="y4" size="1"/>
+    <input id="y5" size="1"/>
+    <h2>Gray Letters</h2>
+    <p>For each "gray" letter (letter is not part of the solution) put all the letters in this
+      box.</p>
+    <input id="gray" size="1"/>
+  </div>
+  <div class="input wordPicker">
+    <h2>Word Picker</h2>
+    <p>Need to find a word to use? Enter 3-5 letters in the box and we'll give you some words that
+      match.</p>
+    <input id="wordPicker" size="10"/>
+    <ul id="pickedWords">
+      Enter at least 3 letters in the box.
+    </ul>
+  </div>
 </div>
 <div class="freqDisplay">
   <h2><input type="checkbox" id="showFreq"/>Letter Frequencies:</h2>
